@@ -20,16 +20,24 @@ engine.name = "Stack"
 -----------------------------
 
 sel = 0
+initital_monitor_level = 0
 
 -----------------------------
--- INIT
+-- INIT / CLEANUP
 -----------------------------
 
 function init()
   sel = 0
   
+  initital_monitor_level = params:get('monitor_level')
+  params:set('monitor_level', -math.huge)
+  
   pattern = pattern_time.new()
   pattern.process = process_pattern
+end
+
+function cleanup()
+  params:set('monitor_level', initital_monitor_level)
 end
 
 -----------------------------
