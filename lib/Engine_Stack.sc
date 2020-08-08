@@ -9,20 +9,28 @@ Engine_Stack : CroneEngine {
     synth = {
       arg out, sel;
       
-      var input = SoundIn.ar(0);
+      var inputL = SoundIn.ar(0);
+      var inputR = SoundIn.ar(1);
+      
       var base = 31.5;
       var numFilters = 9;
       
-      var filters = Array.fill(numFilters, { | i|
+      var filtersL = Array.fill(numFilters, { | i|
         var index = 2 ** (i + 1);
         var freq = base * index;
-        BPF.ar(input, freq, 0.2)
+        BPF.ar(inputL, freq, 0.2)
       });
       
-      var selected = LinSelectX.ar(sel, filters);
-      var final = Pan2.ar(selected, 0);
+      var filtersR = Array.fill(numFilters, { | i|
+        var index = 2 ** (i + 1);
+        var freq = base * index;
+        BPF.ar(inputR, freq, 0.2)
+      });
       
-      Out.ar(out, (final).dup);
+      var selectedL = LinSelectX.ar(sel, filtersL);
+      var selectedR = LinSelectX.ar(sel, filtersR);
+      
+      Out.ar(out, [selectedL, selectedR]);
     }.play(args: [\out, context.out_b], target: context.xg);
   
     this.addCommand("sel", "i", { arg msg;
