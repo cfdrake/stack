@@ -31,6 +31,7 @@ initital_monitor_level = 0
 -----------------------------
 
 function init()
+  setup_grid()
   setup_params()
   setup_pattern()
 end
@@ -61,6 +62,7 @@ function set_active_filter(idx)
   end
   
   redraw()
+  redraw_grid()
 end
 
 function filter_hz(idx)
@@ -81,6 +83,11 @@ end
 function setup_pattern()
   pattern = pattern_time.new()
   pattern.process = process_pattern
+end
+
+function setup_grid()
+  g = grid.connect()
+  g.key = grid_key
 end
 
 -----------------------------
@@ -121,11 +128,31 @@ function key(n, z)
   end
   
   redraw()
+  redraw_grid()
+end
+
+function grid_key(x, y, z)
+  if y == 1 and z == 1 then
+    params:set("filter", x)
+  elseif y == 2 and x == 1 then
+    key(2, z)
+  elseif y == 2 and x == 2 then
+    key(3, z)
+  end
+  
+  redraw_grid()
 end
 
 -----------------------------
 -- DRAWING
 -----------------------------
+
+function redraw_grid()
+  g:all(0)
+  g:led(params:get("filter"), 1, 15)
+  g:led(1, 2, recording and 15 or 1)
+  g:refresh()
+end
 
 function redraw()
   screen.clear()
