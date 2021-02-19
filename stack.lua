@@ -104,9 +104,7 @@ end
 
 function enc(n, d)
   -- Select filter
-  if n == 1 then
-    params:delta("filter", d)
-  end
+  params:delta("filter", d)
 end
 
 function key(n, z)
@@ -160,23 +158,32 @@ function redraw()
   filter = params:get("filter")
   
   -- Filter index
-  screen.move(0, 45)
+  screen.move(2, 47)
   screen.font_face(2)
   screen.font_size(40)
+  screen.level(1)
+  screen.text(filter)
+  screen.move(0, 45)
   screen.level(15)
   screen.text(filter)
   
   -- Filter hz
-  screen.move(20, 45)
-  screen.font_size(20)
-  screen.level(3)
+  screen.font_size(30)
+  screen.move(28, 46)
+  screen.level(1)
+  screen.text(filter_hz(filter) .. "hz")
+  screen.move(27, 45)
+  screen.level(15)
   screen.text(filter_hz(filter) .. "hz")
   
   -- Recording indicator
-  screen.move(20, 25)
   screen.font_size(10)
-  screen.level(3)
-  screen.text(recording and "recording" or "")
+  screen.move(111, 11)
+  screen.level(1)
+  screen.text(recording and "* rec" or "")
+  screen.move(110, 10)
+  screen.level(15)
+  screen.text(recording and "* rec" or "")
   
   screen.update()
 end
